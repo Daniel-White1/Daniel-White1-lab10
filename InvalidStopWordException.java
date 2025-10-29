@@ -1,3 +1,3 @@
-public class InvalidStopWordException {
+public class InvalidStopWordException extends Exception{
     
 }
