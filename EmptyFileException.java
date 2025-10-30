@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class EmptyFileException extends IOException{
-    public EmptyFileException (String a){
-        super(a);
+    public EmptyFileException (){
+        System.out.println("Empty File Exception: There is nothing in the file");
     }
 }
