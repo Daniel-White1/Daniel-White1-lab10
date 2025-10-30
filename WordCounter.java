@@ -5,7 +5,7 @@ public class WordCounter {
     //This is the method to count the number of words in a text file
     //It reads the entire file if stopword is null otherwise it stops **on** that stopword
     //method returns the word count if it is greater than than or equal to five otherwise it returns toosmalltext error
-    int processText(StringBuffer text){
+    int processText(StringBuffer text) throws TooSmallTextException {
         int wordCounter = 0;
 
         //Regex is the pattern of words that we need to search for to count a single word
@@ -20,11 +20,11 @@ public class WordCounter {
 
         //Once the matcher reaches the end of the file it checks to see if it is too small before returning the count.
         if (wordCounter < 5) {
-            throw TooSmallTextException;
+            throw new TooSmallTextException("Invalid Text Size: Text has less than 5 words");
         }
         return wordCounter;
     }
-    int processText(StringBuffer text, String stopword){
+    int processText(StringBuffer text, String stopword) throws TooSmallTextException, InvalidStopWordException{
         //Counter to track how many words are in it
         int wordCounter = 0;
         boolean foundStopword = false;
@@ -44,8 +44,8 @@ public class WordCounter {
             }
         }
 
-        if (stop) {
-            
+        if (foundStopword == false) {
+            throw new InvalidStopWordException("Invalid Stop Word: Stop Word not found in text");
         }
     }
 
@@ -53,10 +53,9 @@ public class WordCounter {
     //If the path to a file can not be found than repeat asking for the file
     //If the file is empty than return a emptyfileexception error before continuing with the code (which will then cause a 
     // too small error next)
-    StringBuffer processFile(String path){
-
+    StringBuffer processFile(String path) throws EmptyFileException{
+        
     }
-
     //This main method asks a user for 1 or 2
     //If it is 1 than it asks for a string to the path for a file
     //If it is 2 than it directly asks for the text to reathough
