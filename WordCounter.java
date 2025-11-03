@@ -84,31 +84,73 @@ public class WordCounter {
     //Then you input the text in the first command line argument and the stopword in the second command line argument
     //If the stopword isnt found in the text file then propt the user to ask again for the stopline 
     public static void main(String[] args) {
-        //Scanner to input text into the terminal
+        //Variables to track in main
         Scanner scanObject = new Scanner(System.in);
-        System.out.println("Enter 1 to process a file \nEnter 2 to process text directly");
-        String input = scanObject.nextLine();
+        WordCounter wordCounter = new WordCounter();
 
-        while (Integer.parseInt(input) != 1 || Integer.parseInt(input) != 2) {
-            System.out.println("Invalid Input: Please enter either a 1 or a two");
-            input = scanObject.nextLine();
-        }
+        StringBuffer text = new StringBuffer();
+        String stopWord = null;
+        int wordCount = -1;
+        int optionChoice = -1;
 
-        //This runs the code looking for a text file
-        if (Integer.parseInt(input) == 1){
-            System.out.println("Please enter the path to the text file");
-            String textPath = scanObject.nextLine();
-            System.out.println("Please enter the stop word. Leave empty to continue without a stop word");
-            String stopWord = scanObject.nextLine();
-
-            if (stopWord == null) {
-                processFile(textPath);
+        //So we are going to reorganize this into a while loop
+        while (true) {
+            //This block is about getting one or two to finish this off
+            System.out.println("Enter 1 to process a file\nEnter 2 to process text");
+            try {
+                optionChoice = Integer.parseInt(scanObject.nextLine());
+                if (optionChoice == 1 || optionChoice == 2) {
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid option. Please enter one or two");
             }
         }
 
-        //This runs the code using a direct string input
-        if (Integer.parseInt(input) == 2) {
-            
+        //Sets up the option choices for 1
+        //Basically just asks for the file and if it is empty it sets the text to be empty
+        if (optionChoice == 1) {
+            System.out.println("Please enter the path to the file.");
+            String filePath = scanObject.nextLine();
+            try{
+                text = wordCounter.processFile(filePath);
+            } catch (EmptyFileException e) {
+                System.out.println("File is empty setting text to empty");
+                text = new StringBuffer("");
+            }
         }
+
+        //Sets up the option 2 choice
+        //Basically just asks for the text to be inputeded in with a terminal string thingy
+        if (optionChoice == 2) {
+            System.out.println("Please enter the text you wish to process.");
+            text = new StringBuffer(scanObject.nextLine());
+        }
+
+        //Now we set it up to take in a input for stopword
+        System.out.println("Input in the stopword (leave blank for no stopword)");
+        stopWord = scanObject.nextLine();
+
+        //Now we try to process the text and deal with errors and stuff
+        try {
+            wordCount = wordCounter.processText(text, stopWord);
+            System.out.println("Number of words in the text: " + wordCount);
+        } catch (InvalidStopWordException e) {
+            //So we need to re-enter in the stopword if we got that error
+            System.out.println("Enter a new stopword please:");
+            stopWord = scanObject.nextLine();
+            try{
+                wordCount = wordCounter.processText(text, stopWord);
+                System.out.println("Yippie second try worked: " + wordCount);
+            } catch (InvalidStopWordException secondE){
+                System.out.println("Second try failed");
+            } catch(TooSmallTextException secondE){
+                System.out.println("Text is too small");
+            }
+        } catch (TooSmallTextException e){
+            System.out.println("Text is too small");
+        }
+
+        System.out.println("Program hopefully hasent broken");
     }
 }
