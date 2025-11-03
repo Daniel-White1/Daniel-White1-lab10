@@ -11,7 +11,7 @@ public class WordCounter {
     //It reads the entire file if stopword is null otherwise it stops **on** that stopword
     //method returns the word count if it is greater than than or equal to five otherwise it returns toosmalltext error
     
-    public static int processText (StringBuffer text, String stopword) throws TooSmallTexts, InvalidStopwordException{
+    public static int processText (StringBuffer text, String stopword) throws TooSmallText, InvalidStopwordException{
         //Counter to track how many words are in it
         int wordCounter = 0;
         //So I found a neat way to trigger this .
@@ -37,11 +37,11 @@ public class WordCounter {
         }
 
         if (foundStopword == false && stopword != null) {
-            throw new InvalidStopwordException();
+            throw new InvalidStopwordException(stopword);
         }
 
         if (wordCounter < 5) {
-            throw new TooSmallTexts();
+            throw new TooSmallText(wordCounter);
         }
         return wordCounter;
     }
@@ -71,7 +71,7 @@ public class WordCounter {
 
         //If the file is blank (different then null so thats why I used the .isBlank method) then throw the emptyfileexception
         if (fileContent.isBlank()) {
-            throw new EmptyFileException();
+            throw new EmptyFileException(filePath.getFileName().toString());
         }
         return new StringBuffer(fileContent);
     }
@@ -115,7 +115,6 @@ public class WordCounter {
             try{
                 text = wordCounter.processFile(filePath);
             } catch (EmptyFileException e) {
-                System.out.println("File is empty setting text to empty");
                 text = new StringBuffer("");
             }
         }
@@ -146,10 +145,10 @@ public class WordCounter {
                 System.out.println("Yippie second try worked: " + wordCount);
             } catch (InvalidStopwordException secondE){
                 System.out.println("Second try failed");
-            } catch(TooSmallTexts secondE){
+            } catch(TooSmallText secondE){
                 System.out.println("Text is too small");
             }
-        } catch (TooSmallTexts e){
+        } catch (TooSmallText e){
             System.out.println("Text is too small");
         }
 

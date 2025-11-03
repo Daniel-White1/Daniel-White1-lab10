@@ -156,13 +156,9 @@ java.util.NoSuchElementException: No line found
 process long text with found stopword
 process long text with no stopword
 process long text with missing stopword
-Invalid Stop Word. The stop word is not in the text
 process short text with found stopword
-Too Small Text: Text is less than 5 words
 process short text with missing stopword
-Invalid Stop Word. The stop word is not in the text
 process short text with found stopword
-Too Small Text: Text is less than 5 words
 process easy long text with end stopword
 process found file
 process missing file

@@ -80,7 +80,7 @@ public class Lab10_Tester {
     String result = "TooSmallText not raised";
     try {
       WordCounter.processText(input, "red");
-    } catch (TooSmallTexts e){
+    } catch (TooSmallText e){
       result = e.toString();
     } catch (Exception e) {}
     assertEquals(expected, result);
@@ -94,7 +94,7 @@ public class Lab10_Tester {
     String result = "TooSmallText not raised";
     try {
       WordCounter.processText(input, "red");
-    } catch (TooSmallTexts e){
+    } catch (TooSmallText e){
       result = e.toString();
     } catch (Exception e) {}
     assertEquals(expected, result);
@@ -108,7 +108,7 @@ public class Lab10_Tester {
     String result = "TooSmallText not raised";
     try {
       WordCounter.processText(input, "yellow");
-    } catch (TooSmallTexts e){
+    } catch (TooSmallText e){
       result = e.toString();
     } catch (Exception e) {}
     assertEquals(expected, result);
