@@ -10,8 +10,8 @@ public class WordCounter {
     //This is the method to count the number of words in a text file
     //It reads the entire file if stopword is null otherwise it stops **on** that stopword
     //method returns the word count if it is greater than than or equal to five otherwise it returns toosmalltext error
-
-    int processText(StringBuffer text, String stopword) throws TooSmallTextException, InvalidStopWordException{
+    
+    public static int processText (StringBuffer text, String stopword) throws TooSmallTexts, InvalidStopwordException{
         //Counter to track how many words are in it
         int wordCounter = 0;
         //So I found a neat way to trigger this .
@@ -20,7 +20,7 @@ public class WordCounter {
 
         //Regex is the pattern of words that we need to search for to count a single word
         //While stopRegex is the search word we are looking for to stop the code
-        Pattern regex = Pattern.compile("[a-zA-z_0-9']+");
+        Pattern regex = Pattern.compile("[a-zA-Z0-9']+");
         Matcher regexMatcher = regex.matcher(text);   
         
         //While the matcher is true (aka) there is a word then it adds one to the  wordcouter 
@@ -37,11 +37,11 @@ public class WordCounter {
         }
 
         if (foundStopword == false && stopword != null) {
-            throw new InvalidStopWordException();
+            throw new InvalidStopwordException();
         }
 
         if (wordCounter < 5) {
-            throw new TooSmallTextException();
+            throw new TooSmallTexts();
         }
         return wordCounter;
     }
@@ -49,7 +49,7 @@ public class WordCounter {
     //If the path to a file can not be found than repeat asking for the file
     //If the file is empty than return a emptyfileexception error before continuing with the code (which will then cause a 
     // too small error next)
-    StringBuffer processFile(String path) throws EmptyFileException{
+    public static StringBuffer processFile(String path) throws EmptyFileException{
         //Converts the path of the string into a path object.
         Scanner scanner = new Scanner(System.in);
         Path filePath = null;
@@ -130,24 +130,26 @@ public class WordCounter {
         //Now we set it up to take in a input for stopword
         System.out.println("Input in the stopword (leave blank for no stopword)");
         stopWord = scanObject.nextLine();
-
+        if (stopWord.isBlank() == true) {
+            stopWord = null;
+        }
         //Now we try to process the text and deal with errors and stuff
         try {
             wordCount = wordCounter.processText(text, stopWord);
             System.out.println("Number of words in the text: " + wordCount);
-        } catch (InvalidStopWordException e) {
+        } catch (InvalidStopwordException e) {
             //So we need to re-enter in the stopword if we got that error
             System.out.println("Enter a new stopword please:");
             stopWord = scanObject.nextLine();
             try{
                 wordCount = wordCounter.processText(text, stopWord);
                 System.out.println("Yippie second try worked: " + wordCount);
-            } catch (InvalidStopWordException secondE){
+            } catch (InvalidStopwordException secondE){
                 System.out.println("Second try failed");
-            } catch(TooSmallTextException secondE){
+            } catch(TooSmallTexts secondE){
                 System.out.println("Text is too small");
             }
-        } catch (TooSmallTextException e){
+        } catch (TooSmallTexts e){
             System.out.println("Text is too small");
         }
 
