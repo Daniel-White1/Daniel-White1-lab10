@@ -21,13 +21,13 @@ public class WordCounter {
         //Regex is the pattern of words that we need to search for to count a single word
         //While stopRegex is the search word we are looking for to stop the code
         Pattern regex = Pattern.compile("[a-zA-Z0-9']+");
-        Matcher regexMatcher = regex.matcher(text);   
+        Matcher regexMatcher = regex.matcher(text.toString());   
         
         //While the matcher is true (aka) there is a word then it adds one to the  wordcouter 
-        while (regexMatcher.find() == true) {
+        while (regexMatcher.find()) {
             String currentWord = regexMatcher.group();
-
             wordCounter++;
+
             //If the stopword exists and we find it using .equalsIgnoreCase
             //It then breaks out of the while loop
             if (stopword != null && currentWord.equalsIgnoreCase(stopword)) {
@@ -35,14 +35,15 @@ public class WordCounter {
                 break;
             }
         }
+        if (wordCounter < 5) {
+            throw new TooSmallText(wordCounter);
+        }
 
         if (foundStopword == false && stopword != null) {
             throw new InvalidStopwordException(stopword);
         }
 
-        if (wordCounter < 5) {
-            throw new TooSmallText(wordCounter);
-        }
+
         return wordCounter;
     }
     //This method processes a text file into a string buffer and returns it
@@ -93,29 +94,44 @@ public class WordCounter {
         int wordCount = -1;
         int optionChoice = -1;
 
-        //So we are going to reorganize this into a while loop
-        while (true) {
-            //This block is about getting one or two to finish this off
-            System.out.println("Enter 1 to process a file\nEnter 2 to process text");
-            try {
-                optionChoice = Integer.parseInt(scanObject.nextLine());
-                if (optionChoice == 1 || optionChoice == 2) {
-                    break;
+        //So I think the problem I am having is that I am not automatically inputting in a argument like how the junittester
+        //does it
+        //So ill create a if statement to handle it
+        if (args.length >= 1) {
+            optionChoice = 1;
+        }
+
+        //if the above if statement didnt change the optionchoice then continue as normal
+        if (optionChoice == -1) {
+            //So we are going to reorganize this into a while loop
+            while (true) {
+                //This block is about getting one or two to finish this off
+                System.out.println("Enter 1 to process a file\nEnter 2 to process text");
+                try {
+                    optionChoice = Integer.parseInt(scanObject.nextLine());
+                    if (optionChoice == 1 || optionChoice == 2) {
+                        break;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid option. Please enter one or two");
                 }
-            } catch (Exception e) {
-                System.out.println("Invalid option. Please enter one or two");
             }
         }
 
         //Sets up the option choices for 1
         //Basically just asks for the file and if it is empty it sets the text to be empty
         if (optionChoice == 1) {
-            System.out.println("Please enter the path to the file.");
-            String filePath = scanObject.nextLine();
-            try{
-                text = wordCounter.processFile(filePath);
-            } catch (EmptyFileException e) {
-                text = new StringBuffer("");
+            String filePath;
+            if (args.length >= 1) {
+                filePath = args[0];
+            } else {
+                System.out.println("Please enter the path to the file.");
+                filePath = scanObject.nextLine();
+                try{
+                    text = wordCounter.processFile(filePath);
+                } catch (EmptyFileException e) {
+                    text = new StringBuffer("");
+                }
             }
         }
 
@@ -127,14 +143,21 @@ public class WordCounter {
         }
 
         //Now we set it up to take in a input for stopword
-        System.out.println("Input in the stopword (leave blank for no stopword)");
-        stopWord = scanObject.nextLine();
-        if (stopWord.isBlank() == true) {
-            stopWord = null;
+
+        //if the argument inputed is greater than or equal to size two then
+        //the second array input is the stopword
+        if (args.length >= 2) {
+            stopWord = args[1];
+        } else {
+            System.out.println("Input in the stopword (leave blank for no stopword)");
+            stopWord = scanObject.nextLine();
+            if (stopWord.isBlank() == true) {
+                stopWord = null;
+            }
         }
         //Now we try to process the text and deal with errors and stuff
         try {
-            wordCount = wordCounter.processText(text, stopWord);
+            wordCount = WordCounter.processText(text, stopWord);
             System.out.println("Found " + wordCount + " words.");
         } catch (InvalidStopwordException e) {
             //So we need to re-enter in the stopword if we got that error
@@ -151,7 +174,5 @@ public class WordCounter {
         } catch (TooSmallText e){
             System.out.println(e.getMessage());
         }
-
-        System.out.println("Program hopefully hasent broken");
     }
 }

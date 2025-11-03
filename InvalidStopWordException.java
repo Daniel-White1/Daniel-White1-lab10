@@ -1,5 +1,5 @@
 public class InvalidStopwordException extends Exception{
-    public InvalidStopwordException(String stopword){
-        super("Couldn't find stopword: " + stopword);
+    public InvalidStopwordException(String string){
+        super("Couldn't find stopword: " + string);
     }
 }
