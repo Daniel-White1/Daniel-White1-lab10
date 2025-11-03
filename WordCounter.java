@@ -30,7 +30,7 @@ public class WordCounter {
 
             //If the stopword exists and we find it using .equalsIgnoreCase
             //It then breaks out of the while loop
-            if (stopword != null && currentWord.equalsIgnoreCase(stopword)) {
+            if (stopword != null && currentWord.equalsIgnoreCase(stopword) && wordCounter >= 5) {
                 foundStopword = true;
                 break;
             }
