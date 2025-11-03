@@ -14,24 +14,29 @@ public class WordCounter {
     int processText(StringBuffer text, String stopword) throws TooSmallTextException, InvalidStopWordException{
         //Counter to track how many words are in it
         int wordCounter = 0;
-        boolean foundStopword = false;
+        //So I found a neat way to trigger this .
+        //It sets the variable foundStopword or not depending on if stopword was inputted into the method
+        boolean foundStopword = (stopword == null);
 
         //Regex is the pattern of words that we need to search for to count a single word
         //While stopRegex is the search word we are looking for to stop the code
         Pattern regex = Pattern.compile("[a-zA-z_0-9']+");
         Matcher regexMatcher = regex.matcher(text);   
         
-        //While the matcher is true (aka) there is a word then it adds one to the  
+        //While the matcher is true (aka) there is a word then it adds one to the  wordcouter 
         while (regexMatcher.find() == true) {
+            String currentWord = regexMatcher.group();
+
             wordCounter++;
-            //If the word found equals the stop word then break out of the loop
-            if (regexMatcher.group() == stopword) {
+            //If the stopword exists and we find it using .equalsIgnoreCase
+            //It then breaks out of the while loop
+            if (stopword != null && currentWord.equalsIgnoreCase(stopword)) {
                 foundStopword = true;
                 break;
             }
         }
 
-        if (foundStopword == false) {
+        if (foundStopword == false && stopword != null) {
             throw new InvalidStopWordException();
         }
 
@@ -68,8 +73,7 @@ public class WordCounter {
         if (fileContent.isBlank()) {
             throw new EmptyFileException();
         }
-
-        return new StringBuffer();
+        return new StringBuffer(fileContent);
     }
 
     //This  miin method asks a user for 1 or 2
