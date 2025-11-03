@@ -135,21 +135,21 @@ public class WordCounter {
         //Now we try to process the text and deal with errors and stuff
         try {
             wordCount = wordCounter.processText(text, stopWord);
-            System.out.println("Number of words in the text: " + wordCount);
+            System.out.println("Found " + wordCount + " words.");
         } catch (InvalidStopwordException e) {
             //So we need to re-enter in the stopword if we got that error
             System.out.println("Enter a new stopword please:");
             stopWord = scanObject.nextLine();
             try{
                 wordCount = wordCounter.processText(text, stopWord);
-                System.out.println("Yippie second try worked: " + wordCount);
+                System.out.println("Found " + wordCount + " words.");
             } catch (InvalidStopwordException secondE){
-                System.out.println("Second try failed");
+                System.out.println(secondE.getMessage());
             } catch(TooSmallText secondE){
-                System.out.println("Text is too small");
+                System.out.println(secondE.getMessage());
             }
         } catch (TooSmallText e){
-            System.out.println("Text is too small");
+            System.out.println(e.getMessage());
         }
 
         System.out.println("Program hopefully hasent broken");
