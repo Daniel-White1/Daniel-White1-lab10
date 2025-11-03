@@ -10,26 +10,7 @@ public class WordCounter {
     //This is the method to count the number of words in a text file
     //It reads the entire file if stopword is null otherwise it stops **on** that stopword
     //method returns the word count if it is greater than than or equal to five otherwise it returns toosmalltext error
-    int processText(StringBuffer text) throws TooSmallTextException {
-        int wordCounter = 0;
 
-        //Regex is the pattern of words that we need to search for to count a single word
-        //While stopRegex is the search word we are looking for to stop the code
-        Pattern regex = Pattern.compile("[a-zA-z_0-9]+");
-        Matcher regexMatcher = regex.matcher(text);   
-        
-        //While the matcher is true (aka) there is a word then it adds one to the  
-        while (regexMatcher.find() == true) {
-            wordCounter++;
-        }
-
-        //Once the matcher reaches the end of the file it checks to see if it is too small before returning the count.
-        if (wordCounter < 5) {
-            throw new TooSmallTextException();
-        }
-        return wordCounter;
-    }
-    
     int processText(StringBuffer text, String stopword) throws TooSmallTextException, InvalidStopWordException{
         //Counter to track how many words are in it
         int wordCounter = 0;
@@ -37,7 +18,7 @@ public class WordCounter {
 
         //Regex is the pattern of words that we need to search for to count a single word
         //While stopRegex is the search word we are looking for to stop the code
-        Pattern regex = Pattern.compile("[a-zA-z_0-9]+");
+        Pattern regex = Pattern.compile("[a-zA-z_0-9']+");
         Matcher regexMatcher = regex.matcher(text);   
         
         //While the matcher is true (aka) there is a word then it adds one to the  
@@ -57,33 +38,31 @@ public class WordCounter {
         if (wordCounter < 5) {
             throw new TooSmallTextException();
         }
-
         return wordCounter;
     }
-
     //This method processes a text file into a string buffer and returns it
     //If the path to a file can not be found than repeat asking for the file
     //If the file is empty than return a emptyfileexception error before continuing with the code (which will then cause a 
     // too small error next)
     StringBuffer processFile(String path) throws EmptyFileException{
         //Converts the path of the string into a path object.
-        Path filePath = Path.of(path);
+        Scanner scanner = new Scanner(System.in);
+        Path filePath = null;
         String fileContent = null;
-        //Try Catch to make sure you can actually read the file
-        try {
-            fileContent = Files.readString(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        if (fileContent == null) {
-            throw new EmptyFileException();
+        while(true) {
+            try {
+                filePath = Path.of(path);
+                fileContent = Files.readString(filePath);
+                break;
+            } catch (InvalidPathException | IOException e) {
+                System.out.println("Could not open the file please enter in the file path");
+                path = scanner.nextLine();
+            }
         }
-        //returns the new StringBuffer of the file content
-        return new StringBuffer(fileContent);
     }
 
-    //This main method asks a user for 1 or 2
+    //This  miin method asks a user for 1 or 2
     //If it is 1 than it asks for a string to the path for a file
     //If it is 2 than it directly asks for the text to reathough
     //If it isnt one or two it asks for them to input it again
