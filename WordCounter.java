@@ -50,16 +50,26 @@ public class WordCounter {
         Path filePath = null;
         String fileContent = null;
 
+        //While loop because we need to keep checking to see if we have the correct path or not
+        //However if we dont have the correct path then we need to re-enter the path until it can be opened
+        // Once we do we can read the file to see if we have a empty file or not
         while(true) {
             try {
                 filePath = Path.of(path);
                 fileContent = Files.readString(filePath);
                 break;
-            } catch (InvalidPathException | IOException e) {
+            } catch (IOException | InvalidPathException e) {
                 System.out.println("Could not open the file please enter in the file path");
                 path = scanner.nextLine();
             }
         }
+
+        //If the file is blank (different then null so thats why I used the .isBlank method) then throw the emptyfileexception
+        if (fileContent.isBlank()) {
+            throw new EmptyFileException();
+        }
+
+        return new StringBuffer();
     }
 
     //This  miin method asks a user for 1 or 2
